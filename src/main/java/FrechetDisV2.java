@@ -123,7 +123,7 @@ public class FrechetDisV2 extends PApplet {
         return disMatrix;
     }
 
-    private double singleTrajDis(Point[] traj1, Point[] traj2) {
+    public static double singleTrajDis(Point[] traj1, Point[] traj2) {
         double dis = Double.MIN_VALUE;
         for (Point point : traj1) {
             dis = Math.max(dis, point2TrajDis(point, traj2));
@@ -131,7 +131,7 @@ public class FrechetDisV2 extends PApplet {
         return dis;
     }
 
-    private double point2TrajDis(Point point, Point[] traj) {
+    private static double point2TrajDis(Point point, Point[] traj) {
         double dis = Double.MAX_VALUE;
         for (int i = 0; i < traj.length - 1; i++) {
             dis = Math.min(dis, point2Line(traj[i], traj[i + 1], point));
@@ -140,7 +140,7 @@ public class FrechetDisV2 extends PApplet {
     }
 
     //优化
-    private double point2Line(Point p1, Point p2, Point p) {
+    private static double point2Line(Point p1, Point p2, Point p) {
         double ans = 0;
         double a, b, c;
         a = distance(p1, p2);
@@ -169,7 +169,7 @@ public class FrechetDisV2 extends PApplet {
         return ans;
     }
 
-    private double distance(Point p1, Point p2) {
+    private static double distance(Point p1, Point p2) {
         return Math.hypot(p1.x - p2.x, p1.y - p2.y);
     }
 
@@ -202,13 +202,5 @@ public class FrechetDisV2 extends PApplet {
         PApplet.main(new String[]{FrechetDisV2.class.getName()});
     }
 
-    class Point {
-        public double x;
-        public double y;
 
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
 }

@@ -5,12 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class DTWCalThread extends Thread {
-    DTW4TotalTraj.Trajectory[] trajFull;
+    Trajectory[] trajFull;
     int begin;
     int end;
     String path;
 
-    public DTWCalThread(DTW4TotalTraj.Trajectory[] trajFull, int begin, int end,String path) {
+    public DTWCalThread(Trajectory[] trajFull, int begin, int end, String path) {
         this.trajFull = trajFull;
         this.begin = begin;
         this.end = end;
@@ -27,7 +27,7 @@ public class DTWCalThread extends Thread {
                 printMsg(i);
             }
             bound++;
-            DTW4TotalTraj.Trajectory traj = trajFull[i];
+            Trajectory traj = trajFull[i];
 
             str.append(i).append(";");
 
@@ -43,14 +43,14 @@ public class DTWCalThread extends Thread {
 
             if (bound == 10) {
                 writeIntoFile(str);
-                str.delete(0,str.length());
+                str.delete(0, str.length());
                 bound = 0;
             }
         }
         writeIntoFile(str);
     }
 
-    private void printMsg(int i) {
+    public void printMsg(int i) {
         new Thread() {
             @Override
             public void run() {
@@ -59,7 +59,7 @@ public class DTWCalThread extends Thread {
         }.start();
     }
 
-    private void writeIntoFile(StringBuilder str) {
+    public void writeIntoFile(StringBuilder str) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(path + begin + "_.txt", true));
             writer.write(str.toString());
