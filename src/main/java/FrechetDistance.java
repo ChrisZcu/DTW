@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 public class FrechetDistance extends PApplet {
 
@@ -37,8 +38,10 @@ public class FrechetDistance extends PApplet {
         MapUtils.createDefaultEventDispatcher(this, map);
         map.zoomAndPanTo(ZOOMLEVEL, PRESENT);
 
-        loadData("data/data_10.txt");
-        calFreDis();
+        loadData("data/data_100_ran.txt");
+//        calFreDis();
+        random();
+        System.out.println(rmvSet.size());
         System.out.println(rmvSet);
     }
 
@@ -47,12 +50,21 @@ public class FrechetDistance extends PApplet {
         map.draw();
         int i = 0;
         for (Point[] traj : trajFull) {
+//            drawSingleTraj(traj, false);
             if (rmvSet.contains(i)) {
-                drawSingleTraj(traj, false);
+//                drawSingleTraj(traj, false);
             } else {
-                drawSingleTraj(traj, true);
+//                System.out.println(rmvSet.size());
+                drawSingleTraj(traj, false);
             }
             i++;
+        }
+    }
+
+    private void random() {
+        Random ran = new Random(1);
+        while (rmvSet.size() != trajFull.length * 0.5) {
+            rmvSet.add(ran.nextInt(trajFull.length - 1));
         }
     }
 
@@ -82,7 +94,7 @@ public class FrechetDistance extends PApplet {
     }
 
     private void freRmv(double[][] disMatrix) {
-        for (int i = 0; i < trajFull.length * 0.7; i++) {
+        for (int i = 0; i < trajFull.length * 0.5; i++) {
             int id = -1;
             double maxDis = Double.MIN_VALUE;
             for (int j = 0; j < disMatrix.length; j++) {
@@ -186,7 +198,7 @@ public class FrechetDistance extends PApplet {
             while ((line = reader.readLine()) != null) {
                 trajList.add(line);
             }
-            rmvSet = new HashSet<Integer>((int) (trajList.size() * 0.7));
+            rmvSet = new HashSet<Integer>((int) (trajList.size() * 0.5));
             trajFull = new Point[(trajList.size())][];
             int i = 0;
             for (String traj : trajList) {

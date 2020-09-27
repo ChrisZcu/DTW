@@ -34,7 +34,7 @@ public class FrechetDisV2 extends PApplet {
         MapUtils.createDefaultEventDispatcher(this, map);
         map.zoomAndPanTo(ZOOMLEVEL, PRESENT);
 
-        loadData("data/data_10.txt");
+        loadData("data/data_100_ran.txt");
         calFreDis();
         System.out.println(rmvSet);
     }
@@ -45,9 +45,9 @@ public class FrechetDisV2 extends PApplet {
         int i = 0;
         for (Point[] traj : trajFull) {
             if (rmvSet.contains(i)) {
-                drawSingleTraj(traj, false);
+//                drawSingleTraj(traj, false);
             } else {
-                drawSingleTraj(traj, true);
+                drawSingleTraj(traj, false);
             }
             i++;
         }
@@ -79,7 +79,7 @@ public class FrechetDisV2 extends PApplet {
     }
 
     private void freRmv(double[][] disMatrix) {
-        for (int i = 0; i < trajFull.length * 0.7; i++) {
+        for (int i = 0; i < trajFull.length * 0.5; i++) {
             int id = -1;
             double minDis = Double.MAX_VALUE;
             for (int j = 0; j < disMatrix.length; j++) {
@@ -181,7 +181,7 @@ public class FrechetDisV2 extends PApplet {
             while ((line = reader.readLine()) != null) {
                 trajList.add(line);
             }
-            rmvSet = new HashSet<Integer>((int) (trajList.size() * 0.7));
+            rmvSet = new HashSet<Integer>((int) (trajList.size() * 0.5));
             trajFull = new Point[(trajList.size())][];
             int i = 0;
             for (String traj : trajList) {
