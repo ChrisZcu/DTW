@@ -48,10 +48,11 @@ public class DTW extends PApplet {
         map.draw();
         int i = 0;
         for (Vec2[] traj : trajFull) {
-            if (rmvTrajId.contains(i))
+            if (rmvTrajId.contains(i)) {
                 drawSingleTraj(traj, false);
-            else
+            } else {
                 drawSingleTraj(traj, true);
+            }
             i++;
         }
     }
