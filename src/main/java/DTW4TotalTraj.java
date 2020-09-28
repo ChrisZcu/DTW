@@ -30,7 +30,7 @@ public class DTW4TotalTraj {
         int segLen = totLen / 8;
         System.out.println(totLen + ", " + segLen);
         for (int i = 0; i < 8; i++) {
-            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen, path);
+            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet);
             threadPool.submit(st);
         }
 
@@ -88,6 +88,7 @@ public class DTW4TotalTraj {
         if (args.length > 0) {
             dataFilePath = args[0];
             path = args[1];
+            offSet = Integer.parseInt(args[2]);
         }
         loadData();
         long t0 = System.currentTimeMillis();

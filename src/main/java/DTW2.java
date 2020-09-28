@@ -219,7 +219,7 @@ public class DTW2 extends PApplet {
         for (int i = 0; i < traj1.length; i++) {
             int base = (int) (a * i);
             int lowBound = Math.max(base - 5, 0);
-            int upBound = Math.min(base + 6, traj2.length);
+            int upBound = Math.min(base + 5, traj2.length);
             for (int j = lowBound; j < upBound; j++) {
                 disMatrix[i][j] = getDis(traj1[i], traj2[j]);
             }
@@ -228,7 +228,7 @@ public class DTW2 extends PApplet {
             int base = (int) (a * i);
 
             int lowBound = Math.max(base - 5, 1);
-            int upBound = Math.min(base + 6, traj2.length);
+            int upBound = Math.min(base + 5, traj2.length);
             for (int j = lowBound; j < upBound; j++) {
                 disMatrix[i][j] = Math.min(Math.min(disMatrix[i - 1][j - 1], disMatrix[i - 1][j]), disMatrix[i][j - 1]) + disMatrix[i][j];
             }

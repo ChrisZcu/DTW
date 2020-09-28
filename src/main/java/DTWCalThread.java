@@ -9,55 +9,59 @@ public class DTWCalThread extends Thread {
     int begin;
     int end;
     String path;
+    int offset;
 
-    public DTWCalThread(Trajectory[] trajFull, int begin, int end, String path) {
+    public DTWCalThread(Trajectory[] trajFull, int begin, int end, String path, int offSet) {
         this.trajFull = trajFull;
         this.begin = begin;
         this.end = end;
         this.path = path;
+        this.offset = offSet;
     }
 
     @Override
     public void run() {
-        int bound = 0;
-        StringBuilder str = new StringBuilder();
         try {
-            for (int i = begin; i < end; i++) {
-                bound++;
-                if (begin == 0) {
-                    printMsg(i, 0);
+            try {
+                for (int i = begin; i < end; i++) {
+                    double[] res = new double[trajFull.length];
+                    if (begin == offset) {
+                        printMsg(i, 0);
+                    }
+                    Trajectory traj = trajFull[i];
+
+                    StringBuilder str = new StringBuilder(i + ";");
+
+
+                    for (int j = 0; j < i; j++) {
+                        if (begin == offset) {
+                            printMsg(i, j);
+                        }
+//                        str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
+                        res[j] = DTW2.calTrajPairDis(traj.scr, trajFull[j].scr);
+                    }
+//                    str.append("0,");
+                    for (int j = i + 1; j < trajFull.length; j++) {
+                        if (begin == offset) {
+                            printMsg(i, j);
+                        }
+//                        str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
+                        res[j] = DTW2.calTrajPairDis(traj.scr, trajFull[j].scr);
+                    }
+
+//                    str.append("\n");
+                    for (Double d : res) {
+                        str.append(d).append(",");
+                    }
+                    writeIntoFile(str.append("\n"));
+//                    str.delete(0, str.length());
                 }
-                Trajectory traj = trajFull[i];
-
-                str.append(i).append(";");
-
-                for (int j = 0; j < i; j++) {
-//                    if (begin == 0) {
-//                        printMsg(i, j);
-//                    }
-                    str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-                }
-                str.append("0,");
-                for (int j = i + 1; j < trajFull.length; j++) {
-
-//                    if (begin == 0) {
-//                        printMsg(i, j);
-//                    }
-                    str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-                }
-
-                str.append("\n");
-
-                if (bound == 10) {
-                    writeIntoFile(str);
-                    str.delete(0, str.length());
-                    bound = 0;
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        writeIntoFile(str);
     }
 
     public void printMsg(int i, int j) {
@@ -71,13 +75,19 @@ public class DTWCalThread extends Thread {
     }
 
     public void writeIntoFile(StringBuilder str) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(path + begin + "_.txt", true));
-            writer.write(str.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(path + begin + "_.txt", true));
+                    writer.write(str.toString());
+                    writer.close();
+                } catch (
+                        IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
 

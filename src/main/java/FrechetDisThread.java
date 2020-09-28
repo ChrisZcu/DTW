@@ -9,7 +9,7 @@ import java.util.concurrent.*;
 public class FrechetDisThread extends DTWCalThread {
 
     public FrechetDisThread(Trajectory[] trajFull, int begin, int end, String path) {
-        super(trajFull, begin, end, path);
+        super(trajFull, begin, end, path,0);
     }
 
     @Override
