@@ -20,16 +20,17 @@ public class DTW4TotalTraj {
 
     private static String path = "data/";
     private static Trajectory[] trajFull;
+    private static int offSet = 1000000;
 
     private static void calDTWMatrix() {
         ExecutorService threadPool = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
 
-        int totLen = trajFull.length;
+        int totLen = trajFull.length - offSet;
         int segLen = totLen / 8;
         System.out.println(totLen + ", " + segLen);
         for (int i = 0; i < 8; i++) {
-            DTWCalThread st = new DTWCalThread(trajFull, i * segLen, (i + 1) * segLen, path);
+            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen, path);
             threadPool.submit(st);
         }
 
@@ -45,7 +46,12 @@ public class DTW4TotalTraj {
     String filePath = "data/data_100.txt";
     private static String filePath5W = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\Porto5w\\Porto5w.txt";
     private static String fullFilePath = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\porto_full.txt";
-    private static String dataFilePath = fullFilePath;
+    private static String fullSrceenData = "data/screen_point_zoom17.txt";
+    private static String max100File = "data/data_100.txt";
+    private static String max1000File = "data/data_1000.txt";
+    private static String max10000File = "data/data_10000.txt";
+
+    private static String dataFilePath = fullSrceenData;
 
     public static void loadData() {
         try {
@@ -61,16 +67,16 @@ public class DTW4TotalTraj {
 
             trajFull = new Trajectory[trajStr.size()];
             for (String traj : trajStr) {
-                DTW.printMsg(i, 0);
+//                DTW.printMsg(i, 0);
                 String[] data = traj.split(";")[1].split(",");
-                Vec2[] trajData = new Vec2[data.length / 2 - 1];
-                for (int j = 0; j < data.length - 2; j += 2) {
-                    trajData[j / 2] = new Vec2(Float.parseFloat(data[j + 1]), Float.parseFloat(data[j]));
+                Vec2[] trajData = new Vec2[data.length / 2];
+                for (int j = 0; j < data.length - 1; j += 2) {
+                    trajData[j / 2] = new Vec2(Integer.parseInt(data[j]), Integer.parseInt(data[j + 1]));
                 }
                 trajFull[i++] = new Trajectory(trajData);
             }
             trajStr.clear();
-            System.out.println("load done");
+            System.out.println("process done");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,8 +90,9 @@ public class DTW4TotalTraj {
             path = args[1];
         }
         loadData();
-
+        long t0 = System.currentTimeMillis();
         calDTWMatrix();
+        System.out.println("time: " + (System.currentTimeMillis() - t0));
     }
 
 }

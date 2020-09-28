@@ -21,40 +21,51 @@ public class DTWCalThread extends Thread {
     public void run() {
         int bound = 0;
         StringBuilder str = new StringBuilder();
+        try {
+            for (int i = begin; i < end; i++) {
+                bound++;
+                if (begin == 0) {
+                    printMsg(i, 0);
+                }
+                Trajectory traj = trajFull[i];
 
-        for (int i = begin; i < end; i++) {
-            if (begin == 0) {
-                printMsg(i);
+                str.append(i).append(";");
+
+                for (int j = 0; j < i; j++) {
+//                    if (begin == 0) {
+//                        printMsg(i, j);
+//                    }
+                    str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
+                }
+                str.append("0,");
+                for (int j = i + 1; j < trajFull.length; j++) {
+
+//                    if (begin == 0) {
+//                        printMsg(i, j);
+//                    }
+                    str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
+                }
+
+                str.append("\n");
+
+                if (bound == 10) {
+                    writeIntoFile(str);
+                    str.delete(0, str.length());
+                    bound = 0;
+                }
             }
-            bound++;
-            Trajectory traj = trajFull[i];
-
-            str.append(i).append(";");
-
-            for (int j = 0; j < i; j++) {
-                str.append(DTW.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-            }
-            str.append("0,");
-            for (int j = i + 1; j < trajFull.length; j++) {
-                str.append(DTW.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-            }
-
-            str.append("\n");
-
-            if (bound == 10) {
-                writeIntoFile(str);
-                str.delete(0, str.length());
-                bound = 0;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         writeIntoFile(str);
     }
 
-    public void printMsg(int i) {
+    public void printMsg(int i, int j) {
         new Thread() {
             @Override
             public void run() {
-                System.out.println(i + "......");
+                if (j % 1000 == 0)
+                    System.out.println(i + "," + j + "......");
             }
         }.start();
     }

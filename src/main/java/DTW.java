@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class DTW extends PApplet {
-    private int totalSize = 1000;
+    private int totalSize = 100;
 
     private ArrayList<Vec2[]> trajFull = new ArrayList<>(totalSize);
     static UnfoldingMap map = null;
@@ -159,12 +159,17 @@ public class DTW extends PApplet {
     public static double calTrajPairDis(Vec2[] traj1, Vec2[] traj2) {
         double[][] disMatrix = new double[traj1.length][traj2.length];
         for (int i = 0; i < traj1.length; i++) {
-            for (int j = 0; j < traj2.length; j++) {
+            int lowBound = Math.max(i - 5, 0);
+            int upBound = Math.min(i + 5, traj2.length);
+            for (int j = lowBound; j < upBound; j++) {
                 disMatrix[i][j] = getDis(traj1[i], traj2[j]);
             }
         }
         for (int i = 1; i < traj1.length; i++) {
-            for (int j = 1; j < traj2.length; j++) {
+            int lowBound = Math.max(i - 5, 1);
+            int upBound = Math.min(i + 5, traj2.length);
+
+            for (int j = lowBound; j < upBound; j++) {
                 disMatrix[i][j] = Math.min(Math.min(disMatrix[i - 1][j - 1], disMatrix[i - 1][j]), disMatrix[i][j - 1]) + disMatrix[i][j];
             }
         }

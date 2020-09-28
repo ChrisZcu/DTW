@@ -3,6 +3,7 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.providers.MapBox;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.utils.ScreenPosition;
+import org.lwjgl.Sys;
 import processing.core.PApplet;
 
 import java.awt.*;
@@ -34,7 +35,7 @@ public class FrechetDisV2 extends PApplet {
         MapUtils.createDefaultEventDispatcher(this, map);
         map.zoomAndPanTo(ZOOMLEVEL, PRESENT);
 
-        loadData("data/data_100_ran.txt");
+        loadData("data/data_10000.txt");
         calFreDis();
         System.out.println(rmvSet);
     }
@@ -107,17 +108,20 @@ public class FrechetDisV2 extends PApplet {
 
     private double[][] disMatrixCal() {
         double[][] disMatrix = new double[trajFull.length][trajFull.length];
-
+        long t0 = System.currentTimeMillis();
         for (int i = 0; i < trajFull.length; i++) {
             for (int j = 0; j < i; j++) {
+                DTW.printMsg(i,j);
                 disMatrix[i][j] = singleTrajDis(trajFull[i], trajFull[j]);
             }
             disMatrix[i][i] = Double.MIN_VALUE;
             for (int j = i + 1; j < trajFull.length; j++) {
+                DTW.printMsg(i,j);
                 disMatrix[i][j] = singleTrajDis(trajFull[i], trajFull[j]);
             }
         }
         System.out.println("cal done");
+        System.out.println("matrix time: " +(System.currentTimeMillis() - t0) + "ms");
 //        System.out.println(Arrays.deepToString(disMatrix));
 
         return disMatrix;

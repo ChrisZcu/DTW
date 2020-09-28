@@ -17,10 +17,7 @@ public class FrechetDis4Total {
 
         ExecutorService threadPool = new ThreadPoolExecutor(4, 4,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
-
-        threadPool.execute(() -> System.out.println(Thread.currentThread().getName()));
-        threadPool.shutdown();
+                new LinkedBlockingQueue<>(), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
         int totLen = trajFull.length;
         int segLen = totLen / 4;
@@ -41,10 +38,15 @@ public class FrechetDis4Total {
     }
 
 
-    String filePath = "data/data_100.txt";
+    private static String filePath = "data/data_100_ran.txt";
     private static String filePath5W = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\Porto5w\\Porto5w.txt";
     private static String fullFilePath = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\porto_full.txt";
-    private static String dataFilePath = fullFilePath;
+
+    private static String max100File = "data/data_100.txt";
+    private static String max1000File = "data/data_1000.txt";
+    private static String max10000File = "data/data_10000.txt";
+
+    private static String dataFilePath = max100File;
 
     public static void loadData() {
         try {
