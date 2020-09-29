@@ -1,4 +1,3 @@
-import cn.siat.vcc.util.math.Vec2;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -37,16 +36,16 @@ public class DTWCalThread extends Thread {
                         if (begin == offset) {
                             printMsg(i, j);
                         }
-//                        str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-                        res[j] = DTW2.calTrajPairDis(traj.scr, trajFull[j].scr);
+//                        str.append(DTW2.calTrajPairDis(traj.poiList, trajFull[j].scr)).append(",");
+                        res[j] = DTW2.calTrajPairDis(traj.poiList, trajFull[j].poiList);
                     }
 //                    str.append("0,");
                     for (int j = i + 1; j < trajFull.length; j++) {
                         if (begin == offset) {
                             printMsg(i, j);
                         }
-//                        str.append(DTW2.calTrajPairDis(traj.scr, trajFull[j].scr)).append(",");
-                        res[j] = DTW2.calTrajPairDis(traj.scr, trajFull[j].scr);
+//                        str.append(DTW2.calTrajPairDis(traj.poiList, trajFull[j].scr)).append(",");
+                        res[j] = DTW2.calTrajPairDis(traj.poiList, trajFull[j].poiList);
                     }
 
 //                    str.append("\n");

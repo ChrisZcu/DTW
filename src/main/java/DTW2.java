@@ -195,8 +195,8 @@ public class DTW2 extends PApplet {
 //        return disMatrix[traj1.length - 1][traj2.length - 1];
 //    }
 
-    public static double getDis(Vec2 pot1, Vec2 pot2) {
-        return Math.hypot(pot1.x - pot2.x,pot1.y - pot2.y);
+    public static double getDis(Point pot1, Point pot2) {
+        return Math.hypot(pot1.x - pot2.x, pot1.y - pot2.y);
 
 //        return ((Math.pow(pot1.x - pot2.x, 2) + Math.pow(pot1.y - pot2.y, 2)));
     }
@@ -210,8 +210,11 @@ public class DTW2 extends PApplet {
         }.start();
     }
 
-
     public static double calTrajPairDis(Vec2[] traj1, Vec2[] traj2) {
+        return 0;
+    }
+
+    public static double calTrajPairDis(Point[] traj1, Point[] traj2) {
 
         double[][] disMatrix = new double[traj1.length][traj2.length];
         double a = traj2.length * 1.0 / traj1.length;

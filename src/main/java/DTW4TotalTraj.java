@@ -1,14 +1,5 @@
-import cn.siat.vcc.util.math.Vec2;
-import de.fhpotsdam.unfolding.UnfoldingMap;
-import de.fhpotsdam.unfolding.geo.Location;
-import de.fhpotsdam.unfolding.providers.MapBox;
-import de.fhpotsdam.unfolding.utils.MapUtils;
-import de.fhpotsdam.unfolding.utils.ScreenPosition;
-import javafx.geometry.Pos;
-import processing.core.PApplet;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -43,7 +34,7 @@ public class DTW4TotalTraj {
         System.out.println("ALL Done");
     }
 
-    String filePath = "data/data_100.txt";
+    private static String filePath = "data/data_100.txt";
     private static String filePath5W = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\Porto5w\\Porto5w.txt";
     private static String fullFilePath = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\porto_full.txt";
     private static String fullSrceenData = "data/screen_point_zoom17.txt";
@@ -69,9 +60,9 @@ public class DTW4TotalTraj {
             for (String traj : trajStr) {
 //                DTW.printMsg(i, 0);
                 String[] data = traj.split(";")[1].split(",");
-                Vec2[] trajData = new Vec2[data.length / 2];
+                Point[] trajData = new Point[data.length / 2];
                 for (int j = 0; j < data.length - 1; j += 2) {
-                    trajData[j / 2] = new Vec2(Integer.parseInt(data[j]), Integer.parseInt(data[j + 1]));
+                    trajData[j / 2] = new Point(Integer.parseInt(data[j]), Integer.parseInt(data[j + 1]));
                 }
                 trajFull[i++] = new Trajectory(trajData);
             }
@@ -84,7 +75,6 @@ public class DTW4TotalTraj {
     }
 
     public static void main(String[] args) {
-//        PApplet.main(new String[]{DTW4TotalTraj.class.getName()});
         if (args.length > 0) {
             dataFilePath = args[0];
             path = args[1];
