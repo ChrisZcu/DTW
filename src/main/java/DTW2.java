@@ -1,5 +1,4 @@
 
-import cn.siat.vcc.util.math.Vec2;
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.providers.MapBox;
@@ -10,6 +9,7 @@ import processing.core.PApplet;
 
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class DTW2 extends PApplet {
-    private int totalSize = 100;
+    private int totalSize = 1;
 
-    private ArrayList<Vec2[]> trajFull = new ArrayList<>(totalSize);
+    private ArrayList<Point[]> trajFull = new ArrayList<>(totalSize);
     static UnfoldingMap map = null;
 
     @Override
@@ -47,7 +47,7 @@ public class DTW2 extends PApplet {
     public void draw() {
         map.draw();
         int i = 0;
-        for (Vec2[] traj : trajFull) {
+        for (Point[] traj : trajFull) {
             if (rmvTrajId.contains(i)) {
                 drawSingleTraj(traj, false);
             } else {
@@ -57,7 +57,7 @@ public class DTW2 extends PApplet {
         }
     }
 
-    private void drawSingleTraj(Vec2[] traj, boolean color) {
+    private void drawSingleTraj(Point[] traj, boolean color) {
 
         noFill();
         strokeWeight(1);
@@ -67,8 +67,8 @@ public class DTW2 extends PApplet {
             stroke(new Color(235, 200, 68).getRGB());
         }
         beginShape();
-        for (Vec2 poi : traj) {
-            vertex(poi.x, poi.y);
+        for (Point poi : traj) {
+            vertex((float) poi.x, (float) poi.y);
         }
         endShape();
     }
@@ -77,18 +77,34 @@ public class DTW2 extends PApplet {
 
     private void calDTW() {
 //        loadRowData("data/data_" + totalSize + ".txt");
-        loadRowData("data/tmp.txt");
+//        loadRowData("data/data_100.txt");
+        loadRowData("data/portoDecreasing.txt");
         long t0 = System.currentTimeMillis();
-        double[][] trajDisMatrix = new double[totalSize][totalSize];
+        double[][] trajDisMatrix = new double[totalSize][trajFull.size()];
+        long[] timeList = new long[trajFull.size()];
+        int size = -1;
         for (int i = 0; i < totalSize; i++) {
-            for (int j = i + 1; j < totalSize; j++) {
+            System.out.println("longest size: " + trajFull.get(i).length);
+
+            for (int j = i + 1; j < trajFull.size(); j++) {
+                if (trajFull.get(j).length == size) {
+                    continue;
+                }
+                size = trajFull.get(j).length;
                 long tmpTime0 = System.currentTimeMillis();
-//                printMsg(i, j);
                 trajDisMatrix[i][j] = calTrajPairDis(trajFull.get(i), trajFull.get(j));
-                break;
-//                System.out.println("time for single: " + (System.currentTimeMillis() - tmpTime0) + " ms");
+                timeList[j] = (System.currentTimeMillis() - tmpTime0);
+                System.out.println(trajFull.get(i).length + ", " + trajFull.get(j).length + ", time: " + timeList[j]);
+//                break;
             }
         }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("data/timeRecord.txt"));
+            writer.write(Arrays.toString(timeList));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("done");
         for (int i = 0; i < totalSize; i++) {
             for (int j = 0; j < i; j++) {
                 trajDisMatrix[i][j] = trajDisMatrix[j][i];
@@ -145,11 +161,11 @@ public class DTW2 extends PApplet {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] traj = line.split(";")[1].split(",");
-                Vec2[] trajData = new Vec2[traj.length / 2 - 1];
+                Point[] trajData = new Point[traj.length / 2 - 1];
                 for (int j = 0; j < traj.length - 2; j += 2) {
-                    Location loc = new Location(Float.parseFloat(traj[j + 1]), Float.parseFloat(traj[j]));
-                    ScreenPosition src = map.getScreenPosition(loc);
-                    trajData[j / 2] = new Vec2(src.x, src.y);
+//                    Location loc = new Location(Float.parseFloat(traj[j + 1]), Float.parseFloat(traj[j]));
+//                    ScreenPosition src = map.getScreenPosition(loc);
+                    trajData[j / 2] = new Point(Float.parseFloat(traj[j + 1]), Float.parseFloat(traj[j]));
                 }
                 trajFull.add(trajData);
             }
@@ -159,9 +175,9 @@ public class DTW2 extends PApplet {
         }
     }
 
-//    public static double calTrajPairDis(Vec2[] path1, Vec2[] path2) {
-//        Vec2[] traj1;
-//        Vec2[] traj2;
+//    public static double calTrajPairDis(Point[] path1, Point[] path2) {
+//        Point[] traj1;
+//        Point[] traj2;
 //        if (path1.length >= path2.length) {
 //            traj1 = path1;
 //            traj2 = path2;
@@ -210,9 +226,6 @@ public class DTW2 extends PApplet {
         }.start();
     }
 
-    public static double calTrajPairDis(Vec2[] traj1, Vec2[] traj2) {
-        return 0;
-    }
 
     public static double calTrajPairDis(Point[] traj1, Point[] traj2) {
 
@@ -239,8 +252,42 @@ public class DTW2 extends PApplet {
         return disMatrix[traj1.length - 1][traj2.length - 1];
     }
 
+    private static HashSet<Integer>[] getCaledIdSet(int num) {
+        HashSet<Integer>[] hashSetList = new HashSet[num];
+        for (int i = 0; i < num; i++) {
+            hashSetList[i] = new HashSet<>();
+        }
+        String fileNamePattern = "data/%d_.txt";
+        int size = (2389863 - 2000000) / num;
+        for (int i = 0; i < 6; i++) {
+            System.out.println(i);
+            int begin = i * size;
+            String fileName = String.format(fileNamePattern, begin + 2000000);
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(fileName));
+                String line = null;
+                ArrayList<String> tmp = new ArrayList<>();
+                int nums = 0;
+                String lastLine = line;
+                while (true) {
+                    lastLine = line;
+                    line = reader.readLine();
+                    if (line == null)
+                        break;
+                }
+                System.out.println(lastLine.split(";")[0]);
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return hashSetList;
+    }
+
 
     public static void main(String[] args) {
+
         PApplet.main(new String[]{DTW2.class.getName()});
     }
 }

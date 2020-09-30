@@ -12,16 +12,22 @@ public class DTW4TotalTraj {
     private static String path = "data/";
     private static Trajectory[] trajFull;
     private static int offSet = 1000000;
+    private static int[] nextBegin = {1000208,
+            1333528,
+            1666865,
+            1166923,
+            1500207,
+            1833570};
 
     private static void calDTWMatrix() {
-        ExecutorService threadPool = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS,
+        ExecutorService threadPool = new ThreadPoolExecutor(6, 6, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
 
-        int totLen = trajFull.length - offSet;
-        int segLen = totLen / 8;
+        int totLen = 1000000;
+        int segLen = totLen / 6;
         System.out.println(totLen + ", " + segLen);
-        for (int i = 0; i < 8; i++) {
-            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet);
+        for (int i = 0; i < 6; i++) {
+            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet, nextBegin[i]);
             threadPool.submit(st);
         }
 
@@ -36,13 +42,13 @@ public class DTW4TotalTraj {
 
     private static String filePath = "data/data_100.txt";
     private static String filePath5W = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\Porto5w\\Porto5w.txt";
-    private static String fullFilePath = "E:\\zcz\\dbgroup\\DemoSystem\\data\\GPS\\porto_full.txt";
+    private static String fullFilePath = "data/porto_full.txt";
     private static String fullSrceenData = "data/screen_point_zoom17.txt";
     private static String max100File = "data/data_100.txt";
     private static String max1000File = "data/data_1000.txt";
     private static String max10000File = "data/data_10000.txt";
 
-    private static String dataFilePath = fullSrceenData;
+    private static String dataFilePath = fullFilePath;
 
     public static void loadData() {
         try {
@@ -53,6 +59,7 @@ public class DTW4TotalTraj {
                 trajStr.add(line);
             }
             reader.close();
+            System.out.println(trajStr.size());
             System.out.println("load done");
             int i = 0;
 
@@ -62,7 +69,7 @@ public class DTW4TotalTraj {
                 String[] data = traj.split(";")[1].split(",");
                 Point[] trajData = new Point[data.length / 2];
                 for (int j = 0; j < data.length - 1; j += 2) {
-                    trajData[j / 2] = new Point(Integer.parseInt(data[j]), Integer.parseInt(data[j + 1]));
+                    trajData[j / 2] = new Point(Double.parseDouble(data[j]), Double.parseDouble(data[j + 1]));
                 }
                 trajFull[i++] = new Trajectory(trajData);
             }
