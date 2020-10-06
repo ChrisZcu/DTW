@@ -12,7 +12,7 @@ public class DTW4TotalTraj {
     private static String path = "data/";
     private static Trajectory[] trajFull;
     private static int offSet = 1000000;
-    private static int[] nextBegin = {1000208,
+    private static int[] beginAry = {1000208,
             1333528,
             1666865,
             1166923,
@@ -27,7 +27,7 @@ public class DTW4TotalTraj {
         int segLen = totLen / 6;
         System.out.println(totLen + ", " + segLen);
         for (int i = 0; i < 6; i++) {
-            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet, nextBegin[i]);
+            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet, beginAry[i]);
             threadPool.submit(st);
         }
 

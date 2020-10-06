@@ -31,23 +31,19 @@ public class DTWCalThread extends Thread {
                     Trajectory traj = trajFull[i];
 
                     StringBuilder str = new StringBuilder(i + ";");
-                    double res = 0;
+                    float res = 0;
                     long t0 = System.currentTimeMillis();
                     for (int j = 0; j < i; j++) {
-//                        str.append(DTW2.calTrajPairDis(traj.poiList, trajFull[j].scr)).append(",");
                         res += DTW2.calTrajPairDis(traj.poiList, trajFull[j].poiList);
                     }
-//                    str.append("0,");
                     for (int j = i + 1; j < trajFull.length; j++) {
-//                        str.append(DTW2.calTrajPairDis(traj.poiList, trajFull[j].scr)).append(",");
                         res += DTW2.calTrajPairDis(traj.poiList, trajFull[j].poiList);
                     }
-                    if (begin == offset)
-                        System.out.println(i + ", time used for single trajectory: " + (System.currentTimeMillis() - t0));
-//                    str.append("\n");
+                    if (begin == offset) {
+                        System.out.println(i + "......");
+                    }
                     str.append(res).append(",");
                     writeIntoFile(str.append("\n"));
-//                    str.delete(0, str.length());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,15 +58,18 @@ public class DTWCalThread extends Thread {
     }
 
     public void writeIntoFile(StringBuilder str) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(path + begin + "_.txt", true));
-            writer.write(str.toString());
-            writer.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(path + begin + "_.txt", true));
+                    writer.write(str.toString());
+                    writer.close();
+                } catch (
+                        IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
-
-
 }
