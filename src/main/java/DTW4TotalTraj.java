@@ -11,22 +11,22 @@ public class DTW4TotalTraj {
 
     private static String path = "data/";
     private static Trajectory[] trajFull;
-    private static int offSet = 1000000;
-    private static int[] beginAry = {1000208,
-            1333528,
-            1666865,
-            1166923,
-            1500207,
-            1833570};
+    private static int offSet = 30000;
+
 
     private static void calDTWMatrix() {
-        ExecutorService threadPool = new ThreadPoolExecutor(6, 6, 0L, TimeUnit.MILLISECONDS,
+        ExecutorService threadPool = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
 
-        int totLen = 1000000;
-        int segLen = totLen / 6;
-        System.out.println(totLen + ", " + segLen);
-        for (int i = 0; i < 6; i++) {
+        int[] beginAry = new int[8];
+        int segLen = 10000;
+
+        for (int i = 0; i < 8; i++) {
+            beginAry[i] = offSet + i * segLen;
+        }
+
+        System.out.println("per len: " + segLen);
+        for (int i = 0; i < 8; i++) {
             DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet, beginAry[i]);
             threadPool.submit(st);
         }
@@ -65,7 +65,6 @@ public class DTW4TotalTraj {
 
             trajFull = new Trajectory[trajStr.size()];
             for (String traj : trajStr) {
-//                DTW.printMsg(i, 0);
                 String[] data = traj.split(";")[1].split(",");
                 Point[] trajData = new Point[data.length / 2];
                 for (int j = 0; j < data.length - 1; j += 2) {
@@ -78,7 +77,6 @@ public class DTW4TotalTraj {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
@@ -92,5 +90,4 @@ public class DTW4TotalTraj {
         calDTWMatrix();
         System.out.println("time: " + (System.currentTimeMillis() - t0));
     }
-
 }

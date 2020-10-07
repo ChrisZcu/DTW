@@ -1,4 +1,3 @@
-import cn.siat.vcc.util.math.Vec2;
 
 public class Trajectory {
     Point[] poiList;

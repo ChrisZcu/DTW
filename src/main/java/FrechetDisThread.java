@@ -1,10 +1,6 @@
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import sun.nio.ch.ThreadPool;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.*;
 
 public class FrechetDisThread extends DTWCalThread {
 
