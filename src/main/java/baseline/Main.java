@@ -8,16 +8,19 @@ import java.util.List;
 
 public class Main {
     // param for full
-    public static final String DATA_PATH = "";
+    public static final String DATA_PATH = "data/test.txt";
     public static final int LIMIT = -1;
 
     // param for subpart
     // if END == 0, means processing to the last one in full list.
+    // exclude END
+    public static final int END = 0;
     public static final int BEGIN = 0;
-    public static final int END = 0;       // exclude
-    public static final int SIZE = 3_0000; // the size of the heap
+    // the size of the heap
+//    public static final int SIZE = 3_0000;
+    public static final int SIZE = 2;
 
-    public static final String RES_PATH = "";
+    public static final String RES_PATH = "data/test_res.txt";
 
     private static Trajectory[] trajFull;
     private static Trajectory[] trajPart;
@@ -56,7 +59,7 @@ public class Main {
     private static Trajectory[] generateTrajPart() {
         int tmpEnd = (END == 0) ? trajFull.length : END;
 
-        System.out.printf("Generate trajPart = trajFull[%d, %d]%n", BEGIN, tmpEnd);
+        System.out.printf("Generate trajPart = trajFull[%d, %d)%n", BEGIN, tmpEnd);
 
         Trajectory[] trajPart = Arrays.copyOfRange(trajFull, BEGIN, tmpEnd);
         Arrays.sort(trajPart, Comparator.comparing(traj -> traj.getPoiList().length));
@@ -82,6 +85,7 @@ public class Main {
                 continue;
             }
 
+            System.out.println("pick " + curIdx);
             heap.replaceTop(traj);
         }
     }
