@@ -8,8 +8,6 @@ import java.util.Arrays;
  * Max Heap of Traj.
  * <p>
  * Its arr begins at index 1.
- * <p>
- * TODO NEED TEST
  */
 public final class MaxHeap {
     private final int size;             // size of the heap
@@ -38,14 +36,11 @@ public final class MaxHeap {
      */
     private void initScore() {
         System.out.println("Init score ...");
-        int outCnt = size / 100 + 2;
-        for (int i = 1; i <= size; i++) {
+        for (int i = 1, cnt = 0; i <= size; i++, cnt ++) {
             Trajectory traj = heapArr[i];
             double score = DTW.getDisSum(traj, Double.MAX_VALUE);
             traj.setScore(score);
-            if (i % outCnt == 0) {
-                System.out.println("cur idx = " + i);
-            }
+            System.out.println("cur idx = " + i);
         }
     }
 

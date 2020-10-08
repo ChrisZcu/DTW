@@ -43,8 +43,11 @@ public class Main {
         if (trajPart.length <= SIZE) {
             // no need to pick top-k
             System.out.println("No need to pick.");
+            int cnt = 0;
             for (Trajectory traj : trajPart) {
                 traj.setScore(DTW.getDisSum(traj, Double.MAX_VALUE));
+                System.out.println("cur idx = " + cnt);
+                cnt ++;
             }
             Util.saveTrajListToFile(RES_PATH, trajPart);
             System.exit(0);
