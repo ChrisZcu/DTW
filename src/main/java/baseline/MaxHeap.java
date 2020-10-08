@@ -13,7 +13,6 @@ import java.util.Arrays;
  */
 public final class MaxHeap {
     private final int size;             // size of the heap
-    private final Trajectory[] trajPart;
     private final Trajectory[] heapArr;
 
     /**
@@ -22,7 +21,6 @@ public final class MaxHeap {
      * Only use first {@link #size} traj, and require the giving list is larger that this size.
      */
     public MaxHeap(Trajectory[] trajPart, int size) {
-        this.trajPart = trajPart;
         this.size = size;
         this.heapArr = new Trajectory[size + 1];
 
@@ -85,30 +83,30 @@ public final class MaxHeap {
 
         while (true) {
             int leftIdx = 2 * index;
-            if (leftIdx >= size) {
+            if (leftIdx > size) {
                 // no child
                 return;
             }
             int rightIdx = 2 * index + 1;
             int maxIdx;
 
-            if (rightIdx >= size) {
+            if (rightIdx > size) {
                 // no right child
                 maxIdx = leftIdx;
             } else {
                 // has right child, take bigger one
-                maxIdx = trajPart[leftIdx].getScore() > trajPart[rightIdx].getScore() ?
+                maxIdx = heapArr[leftIdx].getScore() > heapArr[rightIdx].getScore() ?
                         leftIdx : rightIdx;
             }
 
-            if (trajPart[index].getScore() >= trajPart[maxIdx].getScore()) {
+            if (heapArr[index].getScore() >= heapArr[maxIdx].getScore()) {
                 // no need for shiftDown
                 return;
             }
 
             Trajectory tmp = heapArr[index];
-            trajPart[index] = trajPart[maxIdx];
-            trajPart[maxIdx] = tmp;
+            heapArr[index] = heapArr[maxIdx];
+            heapArr[maxIdx] = tmp;
 
             // move to next
             index = maxIdx;
@@ -119,7 +117,7 @@ public final class MaxHeap {
      * @return An array copy of {@link #heapArr}, without first null places.
      */
     public Trajectory[] getTrajArr() {
-        return Arrays.copyOfRange(heapArr, 1, size);
+        return Arrays.copyOfRange(heapArr, 1, size + 1);
     }
 }
 

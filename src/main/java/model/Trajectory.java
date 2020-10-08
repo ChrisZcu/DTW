@@ -26,4 +26,12 @@ public final class Trajectory {
     public void setScore(double score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "Trajectory{" +
+                "tid=" + tid +
+                ", score=" + score +
+                '}';
+    }
 }

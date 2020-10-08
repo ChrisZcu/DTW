@@ -18,7 +18,7 @@ public class Main {
     public static final int BEGIN = 0;
     // the size of the heap
 //    public static final int SIZE = 3_0000;
-    public static final int SIZE = 2;
+    public static final int SIZE = 5;
 
     public static final String RES_PATH = "data/test_res.txt";
 
@@ -85,7 +85,7 @@ public class Main {
                 continue;
             }
 
-            System.out.println("pick " + curIdx);
+            System.out.println(">>>> Pick traj " + curIdx);
             traj.setScore(score);
             heap.replaceTop(traj);
         }

@@ -88,8 +88,8 @@ public class Util {
                 writer.write(traj.getTid() + "," + 0);
                 writer.newLine();
             }
+            writer.close();
             System.out.println("\b\b\bfinished.");
-
         } catch (IOException e) {
             System.out.println("\b\b\bfailed.");
             e.printStackTrace();
