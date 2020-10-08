@@ -86,6 +86,7 @@ public class Main {
             }
 
             System.out.println("pick " + curIdx);
+            traj.setScore(score);
             heap.replaceTop(traj);
         }
     }
