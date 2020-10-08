@@ -66,7 +66,6 @@ public final class DTW {
         }
         for (int i = 1; i < len1; i++) {
             int base = (int) (rate * i);
-
             int lowBound = Math.max(base - 5, 1);
             int upBound = Math.min(base + 5, len2);
             for (int j = lowBound; j < upBound; j++) {

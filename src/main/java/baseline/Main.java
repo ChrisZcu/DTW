@@ -8,7 +8,8 @@ import java.util.List;
 
 public class Main {
     // param for full
-    public static final String DATA_PATH = "data/test.txt";
+    public static final String DATA_PATH = "C:\\LocalDocument\\LocalCode\\DBGroup\\VIS\\data\\porto_full.txt";
+//    public static final String DATA_PATH = "data/test.txt";
     public static final int LIMIT = -1;
 
     // param for subpart
@@ -20,7 +21,8 @@ public class Main {
 //    public static final int SIZE = 3_0000;
     public static final int SIZE = 5;
 
-    public static final String RES_PATH = "data/test_res.txt";
+    public static final String RES_PATH = "data/porto_baseline.txt";
+//    public static final String RES_PATH = "data/test_res.txt";
 
     private static Trajectory[] trajFull;
     private static Trajectory[] trajPart;
@@ -39,6 +41,8 @@ public class Main {
         DTW.setTrajFull(trajFull);      // must call it before run
 
         trajPart = generateTrajPart();
+
+        System.out.println(">>> first traj poi length = " + trajPart[0].getPoiList().length);
 
         if (trajPart.length <= SIZE) {
             // no need to pick top-k

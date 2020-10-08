@@ -3,6 +3,7 @@ package baseline;
 import model.Trajectory;
 
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Max Heap of Traj.
@@ -36,11 +37,35 @@ public final class MaxHeap {
      */
     private void initScore() {
         System.out.println("Init score ...");
-        for (int i = 1, cnt = 0; i <= size; i++, cnt ++) {
-            Trajectory traj = heapArr[i];
-            double score = DTW.getDisSum(traj, Double.MAX_VALUE);
-            traj.setScore(score);
-            System.out.println("cur idx = " + i);
+
+        int threadNum = 8;
+        final CountDownLatch cdl = new CountDownLatch(threadNum);
+
+        int segLen = size / threadNum;
+
+        for (int i = 0; i < threadNum; i++) {
+
+            int finalI = i;
+            new Thread(() -> {
+                int lower = segLen * finalI + 1;
+                int upper = Math.min(size, (finalI + 1) * segLen);
+                System.out.println("thread " + finalI + " begin. [" + lower + "," + upper + "]");
+
+                for (int j = lower; j <= upper; j++) {
+                    Trajectory traj = heapArr[j];
+                    double score = DTW.getDisSum(traj, Double.MAX_VALUE);
+                    traj.setScore(score);
+                    System.out.println("cur idx = " + j);
+                }
+                cdl.countDown();
+                System.out.println("thread " + finalI + " finished");
+            }).start();
+        }
+
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
