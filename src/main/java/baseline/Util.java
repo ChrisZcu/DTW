@@ -77,7 +77,7 @@ public class Util {
 
     /**
      * Format:
-     * trajId,0 (not used for now)
+     * trajId,sum
      */
     public static void saveTrajListToFile(String filePath, Trajectory[] trajList) {
         System.out.print("Write traj list to " + filePath + " ...");
@@ -85,7 +85,7 @@ public class Util {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
             for (Trajectory traj : trajList) {
-                writer.write(traj.getTid() + "," + 0);
+                writer.write(traj.getTid() + "," + traj.getScore());
                 writer.newLine();
             }
             writer.close();

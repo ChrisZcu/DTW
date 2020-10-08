@@ -37,11 +37,15 @@ public final class MaxHeap {
      * Cal all traj's score in the heap
      */
     private void initScore() {
-        System.out.println("Init score");
+        System.out.println("Init score ...");
+        int outCnt = size / 100 + 2;
         for (int i = 1; i <= size; i++) {
             Trajectory traj = heapArr[i];
             double score = DTW.getDisSum(traj, Double.MAX_VALUE);
             traj.setScore(score);
+            if (i % outCnt == 0) {
+                System.out.println("cur idx = " + i);
+            }
         }
     }
 

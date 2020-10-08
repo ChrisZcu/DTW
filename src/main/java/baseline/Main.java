@@ -43,6 +43,9 @@ public class Main {
         if (trajPart.length <= SIZE) {
             // no need to pick top-k
             System.out.println("No need to pick.");
+            for (Trajectory traj : trajPart) {
+                traj.setScore(DTW.getDisSum(traj, Double.MAX_VALUE));
+            }
             Util.saveTrajListToFile(RES_PATH, trajPart);
             System.exit(0);
         }
@@ -85,7 +88,7 @@ public class Main {
                 continue;
             }
 
-            System.out.println(">>>> Pick traj " + curIdx);
+            System.out.println("Pick traj " + curIdx);
             traj.setScore(score);
             heap.replaceTop(traj);
         }
