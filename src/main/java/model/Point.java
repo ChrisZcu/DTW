@@ -1,4 +1,6 @@
-class Point {
+package model;
+
+public final class Point {
     public double x;
     public double y;
 
