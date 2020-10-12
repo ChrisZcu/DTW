@@ -31,7 +31,7 @@ public class DrawApp extends PApplet {
         initMap();
 
         loadData();
-        Pair[] pairList = getTrajToScore("data/dtw");
+        Pair[] pairList = getTrajToScore("data/dtw_sz_20w");        // !!!
         Arrays.sort(pairList, (p1, p2) -> Double.compare(p2.score, p1.score));
         initTrajDWT(pairList);
         initTrajDWTPart(pairList);
@@ -49,7 +49,9 @@ public class DrawApp extends PApplet {
         map.setZoomRange(1, 20);
         map.setBackgroundColor(255);
         MapUtils.createDefaultEventDispatcher(this, map);
-        map.zoomAndPanTo(11, new Location(41.14, -8.639));
+        // !!!
+//        map.zoomAndPanTo(11, new Location(41.14, -8.639));
+        map.zoomAndPanTo(11, new Location(22.577456, 113.97001));
     }
 
     private void initPaint() {
@@ -148,13 +150,16 @@ public class DrawApp extends PApplet {
             traj.tid = pair.tid;
             trajDWT[idx++] = traj;
         }
+
+        // temp
+        saveDTW();
     }
 
     /**
      * Init {@link #trajDWTPart}, set it to the first 20k traj in pairList
      */
     private void initTrajDWTPart(Pair[] pairList) {
-        int len = (int) (trajFull.length * 0.01);
+        int len = (int) (trajDWT.length * 0.01);
         System.out.println("init traj dwt part list. size = " + len);
         trajDWTPart = new Trajectory[len];
         for (int i = 0; i < trajDWTPart.length; i++) {
@@ -166,10 +171,27 @@ public class DrawApp extends PApplet {
         saveDTWPart();
     }
 
-    private void saveDTWPart() {
-        String path = "data/dwt_0.01.txt";
+    private void saveDTW() {
+        String path = "data/dwt_sz_20w.txt";   // !!!
 
-        System.out.print("Write vfgs result to " + path + " ...");
+        System.out.print("Write dtw result to " + path + " ...");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            for (Trajectory traj : trajDWT) {
+                writer.write(traj.tid + "," + 0);
+                writer.newLine();
+            }
+            System.out.println("\b\b\bfinished.");
+        } catch (IOException e) {
+            System.out.println("\b\b\bfailed.");
+            e.printStackTrace();
+        }
+    }
+
+    private void saveDTWPart() {
+        String path = "data/dwt_sz_0.01.txt";   // !!!
+
+        System.out.print("Write dtw part result to " + path + " ...");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             for (Trajectory traj : trajDWTPart) {
@@ -185,8 +207,9 @@ public class DrawApp extends PApplet {
 
     public void loadData() {
         try {
-            ArrayList<String> trajStr = new ArrayList<>(2400000);
-            BufferedReader reader = new BufferedReader(new FileReader("C:\\LocalDocument\\LocalCode\\DBGroup\\VIS\\data\\porto_full.txt"));
+            ArrayList<String> trajStr = new ArrayList<>();
+            // !!!
+            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\sz_score.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
                 trajStr.add(line);
@@ -200,7 +223,7 @@ public class DrawApp extends PApplet {
             for (String traj : trajStr) {
                 String[] data = traj.split(";")[1].split(",");
                 Point[] trajData = new Point[data.length / 2 - 1];
-                for (int j = 0; j < data.length - 2; j += 2) {
+                for (int j = 0; j < data.length - 3; j += 2) {
                     trajData[j / 2] = new Point(Double.parseDouble(data[j]), Double.parseDouble(data[j + 1]));
                 }
                 trajFull[i++] = new Trajectory(trajData);

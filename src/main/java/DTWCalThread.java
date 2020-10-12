@@ -2,7 +2,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public final class  DTWCalThread extends Thread {
+public class  DTWCalThread extends Thread {
     private static final int MAX_POS_SIZE = 4000;
 
     Trajectory[] trajFull;

@@ -1,5 +1,6 @@
 
 public class Trajectory {
+    int tid;
     Point[] poiList;
 //    Vec2[] scr;
 //
