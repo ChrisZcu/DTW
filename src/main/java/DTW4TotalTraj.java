@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 public class DTW4TotalTraj {
 
-    private static String path = "data/";
+    private static String path = "data/dtw_sz_20w/";
     private static Trajectory[] trajFull;
-    private static int offSet = 37500;
+    private static int offSet = 0;
 
 
     private static void calDTWMatrix() {
@@ -19,7 +19,7 @@ public class DTW4TotalTraj {
                 new LinkedBlockingQueue<>());
 
         int[] beginAry = new int[8];
-        int segLen = 10000;
+        int segLen = trajFull.length / 8;
 
         for (int i = 0; i < 8; i++) {
             beginAry[i] = offSet + i * segLen;
@@ -27,7 +27,10 @@ public class DTW4TotalTraj {
 
         System.out.println("per len: " + segLen);
         for (int i = 0; i < 8; i++) {
-            DTWCalThread st = new DTWCalThread(trajFull, i * segLen + offSet, (i + 1) * segLen + offSet, path, offSet, beginAry[i]);
+            int lower = i * segLen + offSet;
+            int upper = Math.min((i + 1) * segLen + offSet, trajFull.length);
+            System.out.printf("thread %d, [%d, %d)%n", i, lower, upper);
+            DTWCalThread st = new DTWCalThread(trajFull, lower, upper, path, offSet, beginAry[i]);
             threadPool.submit(st);
         }
 
@@ -48,15 +51,20 @@ public class DTW4TotalTraj {
     private static String max1000File = "data/data_1000.txt";
     private static String max10000File = "data/data_10000.txt";
 
-    private static String dataFilePath = fullFilePath;
+    private static final String szPart = "C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\sz_score.txt";
+
+    private static String dataFilePath = szPart;
+    private static int LIMIT = 20_0000;
 
     public static void loadData() {
         try {
-            ArrayList<String> trajStr = new ArrayList<>(2400000);
+            ArrayList<String> trajStr = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new FileReader(dataFilePath));
             String line;
-            while ((line = reader.readLine()) != null) {
+            int cnt = 0;
+            while (cnt < LIMIT && (line = reader.readLine()) != null) {
                 trajStr.add(line);
+                cnt ++;
             }
             reader.close();
             System.out.println(trajStr.size());
