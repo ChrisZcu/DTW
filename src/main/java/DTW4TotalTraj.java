@@ -11,7 +11,7 @@ public class DTW4TotalTraj {
 
     private static String path = "data/";
     private static Trajectory[] trajFull;
-    private static int offSet = 30000;
+    private static int offSet = 37500;
 
 
     private static void calDTWMatrix() {
