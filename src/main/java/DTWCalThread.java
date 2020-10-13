@@ -3,7 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class  DTWCalThread extends Thread {
-    private static final int MAX_POS_SIZE = 4000;
+//    private static final int MAX_POS_SIZE = 4000;
+    private static final int MAX_POS_SIZE = 7000;       // for chengdu
 
     Trajectory[] trajFull;
     int begin;

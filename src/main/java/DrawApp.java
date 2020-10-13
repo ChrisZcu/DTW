@@ -31,7 +31,10 @@ public class DrawApp extends PApplet {
         initMap();
 
         loadData();
-        Pair[] pairList = getTrajToScore("data/dtw_sz_20w");        // !!!
+        // !!!
+//        Pair[] pairList = getTrajToScore("data/dtw_sz_20w");
+//        Pair[] pairList = getTrajToScore("data/dtw_porto");
+        Pair[] pairList = getTrajToScore("data/dtw_cd_20w");
         Arrays.sort(pairList, (p1, p2) -> Double.compare(p2.score, p1.score));
         initTrajDWT(pairList);
         initTrajDWTPart(pairList);
@@ -51,7 +54,8 @@ public class DrawApp extends PApplet {
         MapUtils.createDefaultEventDispatcher(this, map);
         // !!!
 //        map.zoomAndPanTo(11, new Location(41.14, -8.639));
-        map.zoomAndPanTo(11, new Location(22.577456, 113.97001));
+//        map.zoomAndPanTo(11, new Location(22.577456, 113.97001));
+        map.zoomAndPanTo(11, new Location(30.658524, 104.065747));      // chengdu
     }
 
     private void initPaint() {
@@ -159,7 +163,7 @@ public class DrawApp extends PApplet {
      * Init {@link #trajDWTPart}, set it to the first 20k traj in pairList
      */
     private void initTrajDWTPart(Pair[] pairList) {
-        int len = (int) (trajDWT.length * 0.01);
+        int len = (int) (trajFull.length * 0.01);
         System.out.println("init traj dwt part list. size = " + len);
         trajDWTPart = new Trajectory[len];
         for (int i = 0; i < trajDWTPart.length; i++) {
@@ -172,7 +176,10 @@ public class DrawApp extends PApplet {
     }
 
     private void saveDTW() {
-        String path = "data/dwt_sz_20w.txt";   // !!!
+        // !!!
+//        String path = "data/dtw_porto_20w.txt";
+//        String path = "data/dtw_sz_20w.txt";
+        String path = "data/dtw_cd_20w.txt";
 
         System.out.print("Write dtw result to " + path + " ...");
 
@@ -189,7 +196,10 @@ public class DrawApp extends PApplet {
     }
 
     private void saveDTWPart() {
-        String path = "data/dwt_sz_0.01.txt";   // !!!
+        // !!!
+//        String path = "data/dtw_porto_0.01.txt";
+//        String path = "data/dtw_sz_0.01.txt";
+        String path = "data/dtw_cd_0.01.txt";
 
         System.out.print("Write dtw part result to " + path + " ...");
 
@@ -209,7 +219,9 @@ public class DrawApp extends PApplet {
         try {
             ArrayList<String> trajStr = new ArrayList<>();
             // !!!
-            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\sz_score.txt"));
+//            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\porto_full.txt"));
+//            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\sz_score.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\cd_new_score.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
                 trajStr.add(line);

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DTW4TotalTraj {
 
-    private static String path = "data/dtw_sz_20w/";
+    private static String path = "data/dtw_cd_20w/";
     private static Trajectory[] trajFull;
     private static int offSet = 0;
 
@@ -19,7 +19,7 @@ public class DTW4TotalTraj {
                 new LinkedBlockingQueue<>());
 
         int[] beginAry = new int[8];
-        int segLen = trajFull.length / 8;
+        int segLen = 1_0000;
 
         for (int i = 0; i < 8; i++) {
             beginAry[i] = offSet + i * segLen;
@@ -52,8 +52,9 @@ public class DTW4TotalTraj {
     private static String max10000File = "data/data_10000.txt";
 
     private static final String szPart = "C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\sz_score.txt";
+    private static final String cdPart = "C:\\Users\\Administrator\\Desktop\\zhengxin\\vfgs\\cd_new_score.txt";
 
-    private static String dataFilePath = szPart;
+    private static String dataFilePath = cdPart;
     private static int LIMIT = 20_0000;
 
     public static void loadData() {
